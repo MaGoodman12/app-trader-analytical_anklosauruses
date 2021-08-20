@@ -93,7 +93,7 @@ FROM play_store_apps
 UNION ALL
 SELECT name,rating,review_count,genres
 FROM app_store_apps
-WHERE rating > 4
+WHERE rating = 5
 ORDER BY review_count DESC;
 
 SELECT name, rating, review_count, genres
@@ -110,3 +110,10 @@ FROM play_store_apps
 GROUP BY name, SUM(review_count),
 GROUP BY SUM(review_count) DESC
 LIMIT 20;
+
+SELECT *
+FROM play_store_apps;
+
+
+
+
