@@ -1,21 +1,31 @@
 select * 
 from app_store_apps;
 
-select distinct name, primary_genre, rating, review_count
+select distinct name, genres, rating, review_count
 from app_store_apps
 order by review_count desc;
 
-ALTER TABLE app_store_apps
-RENAME COLUMN primary_genre to genres;
-
--- important columns: name, rating, review_count, content_rating, genres 
+-- important columns: name, rating, review_count, content_rating, genres
 -- columns cannot be repeated or you will receive ambiguous error
--- 
+--changed primary_genre to genres
+--used this to change column from text to integer 
+--****** ALTER TABLE app_store_apps ALTER COLUMN review_count TYPE INTEGER USING (review_count::integer);
 
 SELECT review_count, rating, content_rating, genres
 from app_store_apps as app_table
 inner join play_store_apps as play_table
-on app_table.genres = play_table.genres; 
+on app_table.genres = play_table.genres;  
+
+SELECT name, price, review_count, rating, genres
+FROM app_store_apps
+WHERE review_count >= 100000
+	AND rating >= 4.0
+	AND price >0
+	AND genres = 'Games'
+GROUP BY review_count, name, price, rating, genres
+ORDER BY rating desc;
+
+
 
 
 	
