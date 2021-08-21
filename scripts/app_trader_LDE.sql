@@ -85,7 +85,7 @@ WHERE rating > 4;
 
 SELECT name,rating, review_count, genres
 FROM app_store_apps
-WHERE rating > 4
+WHERE rating > 1
 ORDER BY review_count DESC;
 
 SELECT name,rating,review_count,genres
@@ -105,15 +105,78 @@ LIMIT 20;
 SELECT SUM(review_count)
 FROM play_store_apps;
 
-SELECT name, SUM(review_count),genres
+SELECT name, rating, review_count, genres
 FROM play_store_apps
-GROUP BY name, SUM(review_count),
-GROUP BY SUM(review_count) DESC
+WHERE rating >4 
+ORDER BY review_count DESC
 LIMIT 20;
 
-SELECT *
+SELECT name, rating, review_count, genres
 FROM play_store_apps;
 
 
+SELECT name, rating, review_count, genres
+FROM app_store_apps
+WHERE rating >4.5 
+ORDER BY review_count DESC
+LIMIT 20;
 
+SELECT DISTINCT name, rating, review_count, genres
+FROM play_store_apps
+WHERE rating > 4
+ORDER BY review_count DESC
+LIMIT 20;
+
+SELECT DISTINCT name, rating
+FROM play_store_apps
+WHERE rating > 4
+ORDER BY rating DESC;
+
+SELECT name, rating, genres, price
+FROM play_store_apps
+UNION ALL 
+SELECT name, rating, genres, price
+FROM app_store_apps
+WHERE rating > 4
+ORDER BY rating DESC;
+
+ALTER TABLE play_store_apps ALTER COLUMN price TYPE numeric(5,2)  USING (price::numeric (5,2));
+
+SELECT * 
+FROM play_store_apps;
+
+SELECT 
+FROM play_store_apps
+REPLACE(price, '$', '');
+
+SELECT name, genres, rating
+FROM play_store_apps
+UNION ALL 
+SELECT name, genres, rating
+FROM app_store_apps
+WHERE rating > 4.5
+ORDER BY rating DESC
+LIMIT 10;
+
+
+--SELECT distinct name AS app_name, max(rating) AS rating, review_count, price, type
+--FROM play_store_apps
+--WHERE rating is not null
+--	AND review_count >=100000
+--	AND rating >= 4.5
+--	AND type not like 'Free'
+--GROUP BY review_count, app_name, price, type
+--ORDER BY rating desc;
+
+SELECT name, rating, review_count
+FROM play_store_apps
+UNION ALL
+SELECT name, rating, review_count
+FROM app_store_apps
+	WHERE rating >= 4.5
+ORDER BY review_count DESC;
+
+-- replace(price, '$', '') for $ replace with nothing or add 
+-- Free apps or 1.99, => $1 
+-- top 2 apps
 
