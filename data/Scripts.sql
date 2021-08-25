@@ -27,10 +27,21 @@ ALTER TABLE app_store_apps ALTER COLUMN price TYPE INTEGER  USING (price::intege
 
 SELECT name, price, review_count, rating, primary_genre
 FROM app_store_apps
-WHERE review_count >=100000
+WHERE review_count >=45000
 	AND rating >= 4.0
 	AND price <=1
 	AND primary_genre = 'Games'
 GROUP BY review_count, name, price, rating, primary_genre
-ORDER BY rating desc;
+ORDER BY rating desc
+Limit 100;
+
+SELECT name AS app_name, max(rating) AS rating, review_count, price, type, category
+FROM play_store_apps
+WHERE rating is not null
+	AND review_count >=100000
+	AND rating >= 4.5
+	AND category ilike 'GAME'
+GROUP BY review_count, app_name, price, type, category
+ORDER BY rating desc
+Limit 30;
 
