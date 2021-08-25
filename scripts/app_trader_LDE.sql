@@ -145,8 +145,8 @@ ALTER TABLE play_store_apps ALTER COLUMN price TYPE numeric(5,2)  USING (price::
 SELECT * 
 FROM play_store_apps;
 
-SELECT 
-FROM play_store_apps
+SELECT *
+FROM app_store_apps
 REPLACE(price, '$', '');
 
 SELECT name, genres, rating
@@ -179,4 +179,68 @@ ORDER BY review_count DESC;
 -- replace(price, '$', '') for $ replace with nothing or add 
 -- Free apps or 1.99, => $1 
 -- top 2 apps
+
+SELECT name, rating, review_count
+FROM play_store_apps
+UNION ALL 
+SELECT name, rating, review_count
+FROM app_store_apps
+	WHERE rating >= 4.5 
+ORDER BY review_count DESC;
+
+SELECT DISTINCT name, rating, review_count
+FROM play_store_apps
+UNION ALL 
+SELECT DISTINCT name, rating, review_count
+FROM app_store_apps
+ORDER BY review_count DESC;
+
+SELECT *
+FROM app_store_apps;
+
+SELECT *
+FROM play_store_apps;
+
+SELECT DISTINCT genres, name, rating, review_count, price
+FROM play_store_apps
+UNION ALL 
+SELECT DISTINCT genres, name, rating, review_count, price
+FROM app_store_apps
+	WHERE rating >= 4.5 
+	AND review_count >= 100000
+	AND price > 0
+ORDER BY review_count DESC
+LIMIT 10;
+
+SELECT name, rating, AVG(review_count)
+FROM play_store_apps
+UNION ALL 
+SELECT name, rating, AVG(review_count)
+FROM app_store_apps
+	WHERE rating >= 4.5
+	AND review_count >= 100000
+ORDER BY AVG(review_count) DESC
+LIMIT 25;
+
+
+
+SELECT name, genres, rating, review_count, price
+FROM app_store_apps
+	WHERE rating >= 4.5
+	AND review_count >= 100000
+ORDER BY review_count DESC
+LIMIT 10;
+
+SELECT name, genres, rating, review_count, price
+FROM play_store_apps
+	WHERE review_count > 100000
+	
+
+
+
+
+
+
+
+
 
