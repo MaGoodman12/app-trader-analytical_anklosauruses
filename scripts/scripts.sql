@@ -96,7 +96,8 @@ FROM
 	ORDER BY rating desc, primary_genre asc	
 ) AS sub1
 GROUP BY APP_dist_genre
-ORDER BY genre_count desc;
+ORDER BY genre_count desc
+limit 10;
 
 --PLAY
 SELECT
@@ -112,178 +113,11 @@ FROM
 	ORDER BY rating desc, category asc
 ) AS sub_2
 GROUP BY play_category
-ORDER BY cat_count desc;
-
-
-
---Top_10 apps to recommend
---
-ALTER TABLE app_store_apps ALTER COLUMN review_count TYPE numeric USING (review_count::numeric);
-
-with app AS
-(SELECT
- 	distinct name as dist_name,
-	primary_genre as genres,
-	rating,
-	cast(price as text) as price,
-	round(avg(review_count),1) as avg_a_rev
-FROM app_store_apps
-WHERE rating >= 4.5 AND review_count >=100000
-group by
-	genres,
-	dist_name,
-	rating,
-	price
-ORDER BY
-	avg_a_rev desc,
-	rating desc
-),
-
-play AS
-(SELECT
- 	distinct name as dist_name,
-	genres,
-	rating,
-	replace(price, '0', '0.00') as price,
-	round(avg(review_count),1) as avg_p_rev
-FROM play_store_apps
-WHERE
- rating >= 4.5
- AND review_count >=100000
-group by
-	genres,
-	name,
-	rating,
-	price
-ORDER BY
-	avg_p_rev desc,
-	rating desc
-)
-
-select app.genres,
-	app.dist_name,
-	app.rating, 
-	app.price, 
-	round(sum(avg_a_rev + avg_p_rev),1) AS reviews
-from app
-JOIN play
-on app.dist_name = play.dist_name and app.price = play.price 
-group by app.genres, app.dist_name, app.rating, app.price
-order by reviews desc
+ORDER BY cat_count desc
 limit 10;
 
---Top_25 apps to recommend
---
-ALTER TABLE app_store_apps ALTER COLUMN review_count TYPE numeric USING (review_count::numeric);
 
-with app AS
-(SELECT
- 	distinct name as dist_name,
-	primary_genre as genres,
-	rating,
-	cast(price as text) as price,
-	round(avg(review_count),1) as avg_a_rev
-FROM app_store_apps
-WHERE rating >= 4.5 AND review_count >=100000
-group by
-	genres,
-	dist_name,
-	rating,
-	price
-ORDER BY
-	avg_a_rev desc,
-	rating desc
-),
-
-play AS
-(SELECT
- 	distinct name as dist_name,
-	genres,
-	rating,
-	replace(price, '0', '0.00') as price,
-	round(avg(review_count),1) as avg_p_rev
-FROM play_store_apps
-WHERE
- rating >= 4.5
- AND review_count >=100000
-group by
-	genres,
-	name,
-	rating,
-	price
-ORDER BY
-	avg_p_rev desc,
-	rating desc
-)
-
-select app.genres,
-	app.dist_name,
-	app.rating, 
-	app.price, 
-	round(sum(avg_a_rev + avg_p_rev),1) AS reviews
-from app
-JOIN play
-on app.dist_name = play.dist_name and app.price = play.price 
-group by app.genres, app.dist_name, app.rating, app.price
-order by reviews desc
-limit 25;
-
---Total_best_by_criteria apps to recommend
---
-ALTER TABLE app_store_apps ALTER COLUMN review_count TYPE numeric USING (review_count::numeric);
-
-with app AS
-(SELECT
- 	distinct name as dist_name,
-	primary_genre as genres,
-	rating,
-	cast(price as text) as price,
-	round(avg(review_count),1) as avg_a_rev
-FROM app_store_apps
-WHERE rating >= 4.5 AND review_count >=100000
-group by
-	genres,
-	dist_name,
-	rating,
-	price
-ORDER BY
-	avg_a_rev desc,
-	rating desc
-),
-
-play AS
-(SELECT
- 	distinct name as dist_name,
-	genres,
-	rating,
-	replace(price, '0', '0.00') as price,
-	round(avg(review_count),1) as avg_p_rev
-FROM play_store_apps
-WHERE
- rating >= 4.5
- AND review_count >=100000
-group by
-	genres,
-	name,
-	rating,
-	price
-ORDER BY
-	avg_p_rev desc,
-	rating desc
-)
-
-select app.genres,
-	app.dist_name,
-	app.rating, 
-	app.price, 
-	round(sum(avg_a_rev + avg_p_rev),1) AS reviews
-from app
-JOIN play
-on app.dist_name = play.dist_name and app.price = play.price 
-group by app.genres, app.dist_name, app.rating, app.price
-order by reviews desc;
-
---testing
+--best_apps_by_criteria
 --
 ALTER TABLE app_store_apps ALTER COLUMN review_count TYPE numeric USING (review_count::numeric);
 
@@ -334,6 +168,7 @@ select app.name, app.genres,
 from app
 JOIN play
 using(name, price)
-/*WHERE app.genres ilike '%%'*/
 group by app.genres, app.name, app.rating, app.price
-order by total_rating desc, total_reviews desc;
+order by total_reviews desc, total_rating desc
+limit 10;
+
